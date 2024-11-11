@@ -1,6 +1,6 @@
 pub struct Post {
     state: Option<Box<dyn State>>,
-    pub content: String,
+    content: String,
 }
 
 impl Post {
@@ -66,10 +66,16 @@ trait State {
     fn request_review_final(self: Box<Self>) -> Box<dyn State>;
     fn approve(self: Box<Self>) -> Box<dyn State>;
     fn content<'a>(&self, post: &'a Post) -> &'a str {
-        ""
+        if self.is_draft() {
+            &post.content
+        } else {
+            ""
+        }
     }
     fn reject(self: Box<Self>) -> Box<dyn State>;
-    fn is_draft(&self) -> bool;
+    fn is_draft(&self) -> bool {
+        false
+    }
 
 }
 
@@ -97,6 +103,10 @@ impl State for Draft {
     fn is_draft(&self) -> bool {
         true
     }
+    // fn content<'a>(&self, post: &'a Post) -> &'a str {
+    //     &post.content
+    // }
+
 }
 
 // struct PendingReview {}
@@ -133,9 +143,9 @@ impl State for PendingReview_Pre {
     fn reject(self: Box<Self>) -> Box<dyn State> {
         Box::new(Draft {})
     }
-    fn is_draft(&self) -> bool {
-        false
-    }
+    // fn is_draft(&self) -> bool {
+    //     false
+    // }
 }
 struct PendingReview_Final {}
 
@@ -152,9 +162,9 @@ impl State for PendingReview_Final {
     fn reject(self: Box<Self>) -> Box<dyn State> {
         Box::new(PendingReview_Pre {})
     }
-    fn is_draft(&self) -> bool {
-        false
-    }
+    // fn is_draft(&self) -> bool {
+    //     false
+    // }
 }
 
 struct Published {}
@@ -184,7 +194,7 @@ impl State for Published {
     fn content<'a>(&self, post: &'a Post) -> &'a str {
         &post.content
     }
-    fn is_draft(&self) -> bool {
-        false
-    }
+    // fn is_draft(&self) -> bool {
+    //     false
+    // }
 }

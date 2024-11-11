@@ -12,21 +12,21 @@ fn main() {
     let mut post = Post::new();
 
     post.add_text("I ate a salad for lunch ");
-    assert_eq!("", post.content());
+    assert_eq!("I ate a salad for lunch ", post.content());
 
     // post.request_review();
     // assert_eq!("", post.content());
     post.add_text("today");
-    assert_eq!("I ate a salad for lunch today", post.content);
+    assert_eq!("I ate a salad for lunch today", post.content());
     
     post.request_review_pre();
     assert_eq!("", post.content());
     
     post.add_text("added");
-    assert_eq!("I ate a salad for lunch today", post.content);
+    assert_eq!("", post.content());
 
     post.reject();
-    assert_eq!("", post.content());
+    assert_eq!("I ate a salad for lunch today", post.content());
 
 
     post.request_review_pre();
